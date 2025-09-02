@@ -71,5 +71,5 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
 
   # Allow ngrok host for external access in development
-  config.hosts << '5430b36c0e55.ngrok-free.app'
+  config.hosts << "5430b36c0e55.ngrok-free.app"
 end

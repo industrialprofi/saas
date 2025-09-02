@@ -9,7 +9,7 @@ ActiveRecord::Base.transaction do
   users = [
     { email: 'user1@example.com', password: 'password123' },
     { email: 'user2@example.com', password: 'password123' },
-    { email: 'user3@example.com', password: 'password123' },
+    { email: 'user3@example.com', password: 'password123' }
   ]
 
   users.each do |attrs|
@@ -23,7 +23,7 @@ ActiveRecord::Base.transaction do
 
   telegram_users = [
     { email: 'telegram_1001@example.com', provider: 'telegram', uid: '1001' },
-    { email: 'telegram_1002@example.com', provider: 'telegram', uid: '1002' },
+    { email: 'telegram_1002@example.com', provider: 'telegram', uid: '1002' }
   ]
 
   telegram_users.each do |attrs|

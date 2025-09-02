@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :omniauthable, omniauth_providers: [:telegram]
+         :omniauthable, omniauth_providers: [ :telegram ]
 
   enum :subscription_plan, { free: 0, standard: 1 }, prefix: true, default: :free
 
