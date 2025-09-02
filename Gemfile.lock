@@ -397,6 +397,7 @@ DEPENDENCIES
   solid_queue
   stimulus-rails
   tailwindcss-rails
+  tailwindcss-ruby (~> 4.1)
   thruster
   turbo-rails
   tzinfo-data
