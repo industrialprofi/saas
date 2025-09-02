@@ -3,14 +3,14 @@
 welcome:
   content: "Привет! Я ваш AI-ассистент. Чем я могу вам помочь сегодня?"
   user_type: ai
-  created_at: <%= 10.minutes.ago.to_s(:db) %>
+  created_at: "2025-01-01T10:00:00Z"
 
 user_question:
   content: "Расскажи мне о возможностях этого сервиса"
   user_type: user
-  created_at: <%= 9.minutes.ago.to_s(:db) %>
+  created_at: "2025-01-01T10:01:00Z"
 
 ai_response:
   content: "Наш сервис предлагает продвинутый AI-чат с возможностью решения различных задач: от ответов на вопросы до помощи с кодом, переводами и творческими задачами."
   user_type: ai
-  created_at: <%= 8.minutes.ago.to_s(:db) %>
+  created_at: "2025-01-01T10:02:00Z"
