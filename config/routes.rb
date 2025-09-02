@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   resources :messages, only: [:create]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -16,4 +17,5 @@ Rails.application.routes.draw do
   # Маршруты для страниц "цены" и "поддержка"
   get "pricing", to: "home#pricing"
   get "support", to: "home#support"
+  get "telegram-login", to: "auth#telegram_login"
 end
