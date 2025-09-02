@@ -1,0 +1,20 @@
+ru:
+  date:
+    formats:
+      default: "%d.%m.%Y"
+      short: "%d %b"
+      long: "%d.%m.%Y"
+    day_names: [воскресенье, понедельник, вторник, среда, четверг, пятница, суббота]
+    abbr_day_names: [вс, пн, вт, ср, чт, пт, сб]
+    month_names: [~, январь, февраль, март, апрель, май, июнь, июль, август, сентябрь, октябрь, ноябрь, декабрь]
+    abbr_month_names: [~, янв, фев, мар, апр, май, июн, июл, авг, сен, окт, ноя, дек]
+  time:
+    formats:
+      default: "%d.%m.%Y %H:%M"
+      short: "%d %b %H:%M"
+      long: "%d %B %Y, %H:%M"
+  datetime:
+    formats:
+      default: "%d.%m.%Y %H:%M"
+      short: "%d %b %H:%M"
+      long: "%d %B %Y, %H:%M"
