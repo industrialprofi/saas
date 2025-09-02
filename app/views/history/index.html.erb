@@ -1,0 +1,61 @@
+<% content_for :title, 'История' %>
+
+<header class="bg-white dark:bg-gray-900">
+  <%= render partial: 'shared/navbar' %>
+</header>
+
+<main class="min-h-[70vh] bg-gray-50 dark:bg-gray-900 py-10">
+  <div class="max-w-screen-xl mx-auto px-4">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">Ваша история</h1>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">За 30 дней</p>
+      </div>
+      <%= form_with url: history_path, method: :get, local: true, class: "w-full max-w-xs" do %>
+        <label for="q" class="sr-only">Поиск</label>
+        <div class="relative">
+          <div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
+            <svg class="h-4 w-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z"/></svg>
+          </div>
+          <input type="search" id="q" name="q" value="<%= h(@query) %>" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white" placeholder="Поиск в истории...">
+        </div>
+      <% end %>
+    </div>
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800">
+      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+          <tr>
+            <th scope="col" class="px-6 py-3">Запрос</th>
+            <th scope="col" class="px-6 py-3">Режим</th>
+            <th scope="col" class="px-6 py-3">Дата</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @messages.any? %>
+            <% @messages.each do |msg| %>
+              <tr class="border-b bg-white dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                  <%= truncate(msg.content, length: 80) %>
+                </th>
+                <td class="px-6 py-4 italic text-gray-700 dark:text-gray-300">Чат-бот</td>
+                <td class="px-6 py-4 whitespace-nowrap"><%= l(msg.created_at.to_date, format: :long) %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="3" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400">Записей за последние 30 дней не найдено.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-6">
+      <%= link_to root_path, class: "inline-flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-800" do %>
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        Назад
+      <% end %>
+    </div>
+  </div>
+</main>

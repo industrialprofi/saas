@@ -21,4 +21,7 @@ Rails.application.routes.draw do
 
   # Личный кабинет /subscription
   get "subscription", to: "subscription#show"
+
+  # История чатов за 30 дней
+  get "history", to: "history#index"
 end
