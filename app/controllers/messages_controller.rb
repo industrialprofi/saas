@@ -5,12 +5,14 @@ class MessagesController < ApplicationController
     authorize Message
     @message = Message.new(message_params)
     @message.user_type = 'user'
+    @message.user = current_user
     
     if @message.save
       # Создаем ответ от AI
       ai_response = Message.create(
         content: generate_ai_response(@message.content),
-        user_type: 'ai'
+        user_type: 'ai',
+        user: current_user
       )
       
       # Очищаем старые сообщения, оставляя только последние 100

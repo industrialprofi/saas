@@ -1,4 +1,5 @@
 class Message < ApplicationRecord
+  belongs_to :user, optional: true
   validates :content, presence: true
   validates :user_type, presence: true, inclusion: { in: ['user', 'ai'] }
   
@@ -10,6 +11,12 @@ class Message < ApplicationRecord
   
   # Последние N сообщений
   scope :recent, ->(limit = 20) { ordered.limit(limit) }
+
+  # За последние 30 дней (по убыванию)
+  scope :last_30_days, -> { where('created_at >= ?', 30.days.ago).order(created_at: :desc) }
+
+  # Поиск по подстроке (ILIKE)
+  scope :search, ->(q) { q.present? ? where('content ILIKE ?', "%#{sanitize_sql_like(q)}%") : all }
   
   # Сообщения от пользователя
   scope :from_user, -> { where(user_type: 'user') }
@@ -20,7 +27,7 @@ class Message < ApplicationRecord
   # Очистка старых сообщений
   def self.cleanup_old_messages(keep_count = 100)
     return unless count > keep_count
-    
+
     ids_to_keep = ordered.last(keep_count).pluck(:id)
     where.not(id: ids_to_keep).delete_all
   end

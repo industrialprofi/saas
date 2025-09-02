@@ -19,6 +19,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_02_101504) do
     t.datetime "updated_at", null: false
     t.text "content", null: false
     t.string "user_type", default: "user", null: false
+    t.bigint "user_id"
+    t.index ["created_at"], name: "index_messages_on_created_at"
+    t.index ["user_id"], name: "index_messages_on_user_id"
     t.index ["user_type"], name: "index_messages_on_user_type"
   end
 
@@ -38,4 +41,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_02_101504) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["subscription_plan"], name: "index_users_on_subscription_plan"
   end
+
+  add_foreign_key "messages", "users"
 end
