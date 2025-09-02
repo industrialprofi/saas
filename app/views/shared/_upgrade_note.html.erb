@@ -1,0 +1,18 @@
+<div class="w-full max-w-4xl mx-auto">
+  <div class="flex items-start p-4 mb-8 text-green-800 border border-green-200 rounded-full bg-green-50 dark:bg-gray-800 dark:text-green-300 dark:border-green-700">
+    <div class="flex-shrink-0 mt-0.5">
+      <!-- Info icon -->
+      <svg class="w-5 h-5 text-green-600 dark:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3.5a1 1 0 100 2 1 1 0 000-2zM9 9a1 1 0 000 2v3a1 1 0 102 0v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+      </svg>
+    </div>
+    <p class="ms-3 text-sm md:text-base leading-relaxed">
+      Подключите
+      <%= link_to 'пакет запросов', pricing_path(anchor: 'packages'), class: 'font-medium text-blue-700 hover:underline dark:text-blue-400' %>
+      или
+      <%= link_to 'тариф', pricing_path(anchor: 'plans'), class: 'font-medium text-blue-700 hover:underline dark:text-blue-400' %>,
+      чтобы перейти на ChatInfo Plus.
+      <%= link_to 'Примеры генерации', history_path, class: 'font-medium text-blue-700 hover:underline dark:text-blue-400' %>
+    </p>
+  </div>
+</div>
