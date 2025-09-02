@@ -4,23 +4,23 @@
 </header>
 
 <!-- Основной контент -->
-<main class="bg-white dark:bg-gray-900 py-8">
+<main class="bg-gray-50 dark:bg-gray-900 py-12">
   <div class="max-w-screen-xl mx-auto px-4">
-    <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
+    <div class="mx-auto max-w-screen-md text-center mb-10 lg:mb-14">
       <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Тарифные планы</h1>
       <p class="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">Выберите подходящий тарифный план для вашего общения с AI</p>
     </div>
     
-    <div class="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:gap-8 items-stretch">
       <!-- Тарифный план "Базовый" -->
-      <div class="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+      <div class="relative flex flex-col h-full p-6 w-full text-center text-gray-900 bg-white rounded-2xl border border-gray-100 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white overflow-hidden">
         <h3 class="mb-4 text-2xl font-semibold">Базовый</h3>
         <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">Лучший вариант для личного использования и для начинающих.</p>
         <div class="flex justify-center items-baseline my-8">
           <span class="mr-2 text-5xl font-extrabold">0₽</span>
           <span class="text-gray-500 dark:text-gray-400">/месяц</span>
         </div>
-        <ul role="list" class="mb-8 space-y-4 text-left">
+        <ul role="list" class="mb-8 space-y-4 text-left flex-1">
           <li class="flex items-center space-x-3">
             <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
             <span>До 100 сообщений в день</span>
@@ -38,18 +38,21 @@
             <span>Расширенные возможности</span>
           </li>
         </ul>
-        <a href="#" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:focus:ring-blue-900">Начать бесплатно</a>
+        <%= link_to 'Начать бесплатно', subscription_path, class: 'w-full inline-flex justify-center items-center gap-2 text-white bg-blue-600 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 font-semibold rounded-lg text-sm px-5 py-3 text-center dark:text-white dark:focus-visible:ring-blue-400', aria: { label: 'Начать бесплатно, тариф Базовый' } %>
       </div>
       
       <!-- Тарифный план "Стандарт" -->
-      <div class="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
-        <h3 class="mb-4 text-2xl font-semibold">Стандарт</h3>
+      <div class="relative flex flex-col h-full p-6 w-full text-center text-gray-900 bg-white rounded-2xl border border-blue-600/40 ring-1 ring-blue-600/20 shadow-sm transition-shadow hover:shadow-xl dark:border-blue-500/40 xl:p-8 dark:bg-gray-800 dark:text-white overflow-hidden">
+        <div class="flex items-center justify-center gap-3 mb-2">
+          <h3 class="text-2xl font-semibold">Стандарт</h3>
+          <span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20 dark:bg-blue-900/20 dark:text-blue-200">Популярный</span>
+        </div>
         <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">Оптимальный вариант для малого бизнеса.</p>
         <div class="flex justify-center items-baseline my-8">
           <span class="mr-2 text-5xl font-extrabold">999₽</span>
           <span class="text-gray-500 dark:text-gray-400">/месяц</span>
         </div>
-        <ul role="list" class="mb-8 space-y-4 text-left">
+        <ul role="list" class="mb-8 space-y-4 text-left flex-1">
           <li class="flex items-center space-x-3">
             <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
             <span>Неограниченное количество сообщений</span>
@@ -67,37 +70,10 @@
             <span>История сообщений</span>
           </li>
         </ul>
-        <a href="#" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:focus:ring-blue-900">Оформить подписку</a>
+        <%= link_to 'Оформить подписку', subscription_path, class: 'w-full inline-flex justify-center items-center gap-2 text-white bg-blue-600 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 font-semibold rounded-lg text-sm px-5 py-3 text-center dark:text-white dark:focus-visible:ring-blue-400', aria: { label: 'Оформить подписку, тариф Стандарт' } %>
       </div>
       
-      <!-- Тарифный план "Премиум" -->
-      <div class="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
-        <h3 class="mb-4 text-2xl font-semibold">Премиум</h3>
-        <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">Лучший выбор для крупных компаний и команд.</p>
-        <div class="flex justify-center items-baseline my-8">
-          <span class="mr-2 text-5xl font-extrabold">2999₽</span>
-          <span class="text-gray-500 dark:text-gray-400">/месяц</span>
-        </div>
-        <ul role="list" class="mb-8 space-y-4 text-left">
-          <li class="flex items-center space-x-3">
-            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-            <span>Все возможности тарифа Стандарт</span>
-          </li>
-          <li class="flex items-center space-x-3">
-            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-            <span>Доступ к API</span>
-          </li>
-          <li class="flex items-center space-x-3">
-            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-            <span>Персональный менеджер</span>
-          </li>
-          <li class="flex items-center space-x-3">
-            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-            <span>Индивидуальная настройка AI</span>
-          </li>
-        </ul>
-        <a href="#" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:focus:ring-blue-900">Оформить подписку</a>
-      </div>
+      
     </div>
   </div>
 </main>
