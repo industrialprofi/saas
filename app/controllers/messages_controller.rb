@@ -1,5 +1,8 @@
 class MessagesController < ApplicationController
+  before_action :authenticate_user!, only: :create
+
   def create
+    authorize Message
     @message = Message.new(message_params)
     @message.user_type = 'user'
     

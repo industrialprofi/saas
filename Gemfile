@@ -73,3 +73,6 @@ gem "devise", "~> 4.9"
 gem "omniauth", "~> 2.1"
 
 gem "omniauth-telegram", "~> 0.2.1"
+
+# Authorization
+gem "pundit", "~> 2.3"

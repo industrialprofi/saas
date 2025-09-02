@@ -16,6 +16,8 @@ ActiveRecord::Base.transaction do
     u = User.find_or_initialize_by(email: attrs[:email])
     u.password = attrs[:password] if attrs[:password].present?
     u.save!
+    # Make the second user a paid user for testing
+    u.update!(subscription_plan: :standard) if u.email == 'user2@example.com' && u.subscription_plan_free?
     puts "  ✓ #{u.email}"
   end
 
