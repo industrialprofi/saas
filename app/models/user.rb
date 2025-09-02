@@ -5,6 +5,12 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [:telegram]
 
+  enum :subscription_plan, { free: 0, standard: 1 }, prefix: true, default: :free
+
+  def paid?
+    !subscription_plan_free?
+  end
+
   # Create or fetch user from OmniAuth hash
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_initialize.tap do |user|
