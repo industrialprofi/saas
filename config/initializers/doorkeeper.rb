@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Configures Doorkeeper (OAuth 2.0 provider)
 # Внимание: после добавления, выполните миграции doorkeeper и создайте OAuth приложение для server-to-server.
 
@@ -28,7 +29,7 @@ Doorkeeper.configure do
   # Ограничение повторной выдачи одного и того же токена для одного ключа идемпотентности реализуем приложением.
 
   # Включаем Doorkeeper JWT токены (см. doorkeeper-jwt initializer)
-  access_token_generator '::Doorkeeper::JWT'
+  access_token_generator "::Doorkeeper::JWT"
 
   # Валидация скоупов
   enforce_configured_scopes

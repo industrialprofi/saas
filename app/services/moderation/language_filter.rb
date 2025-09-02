@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Moderation
   # Simple Russian language detector (heuristic)
   # В продакшне рекомендую заменить на библиотеку или FastAPI модуль.
@@ -6,7 +7,7 @@ module Moderation
     # Проверяем, что текст на русском языке.
     # Эвристика: достаточная доля кириллицы и отсутствие принудительных латинских слов.
     def self.ru_only!(text)
-      raise ArgumentError, 'text is blank' if text.to_s.strip.empty?
+      raise ArgumentError, "text is blank" if text.to_s.strip.empty?
 
       # Подсчитываем долю кириллических символов
       total = text.scan(/[A-Za-zА-Яа-яЁё]/).size
@@ -19,7 +20,7 @@ module Moderation
 
       # Порог: ≥ 0.6 кириллицы или ≥ 2 общих русских слова
       ok = ratio >= 0.6 || ru_hits >= 2
-      raise StandardError, 'Пожалуйста, используйте русский язык.' unless ok
+      raise StandardError, "Пожалуйста, используйте русский язык." unless ok
 
       true
     end

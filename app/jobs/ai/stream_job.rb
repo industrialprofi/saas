@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Streams AI response from FastAPI via SSE and updates AI message progressively.
 # Требования: FastAPI SSE endpoint, Doorkeeper JWT, RU-only ответы, таймаут 30s.
 
@@ -11,16 +12,16 @@ class Ai::StreamJob < ApplicationJob
     chat_request = ChatRequest.find(chat_request_id)
 
     # Создаем AI-плейсхолдер
-    ai_message = Message.create!(user: user, user_type: 'ai', content: '')
+    ai_message = Message.create!(user: user, user_type: "ai", content: "")
 
     # Собираем последние 10 сообщений пользователя (user/ai)
     history = Message.where(user: user).ordered.last(10)
     messages_payload = [
-      { role: 'system', content: 'Отвечай на русском языке.' }
-    ] + history.map { |m| { role: (m.user_type == 'user' ? 'user' : 'assistant'), content: m.content.to_s } }
+      { role: "system", content: "Отвечай на русском языке." }
+    ] + history.map { |m| { role: (m.user_type == "user" ? "user" : "assistant"), content: m.content.to_s } }
 
     client = Ai::Client.new
-    accumulated = +' '
+    accumulated = +" "
 
     client.stream_chat(
       messages: messages_payload,
@@ -29,19 +30,19 @@ class Ai::StreamJob < ApplicationJob
       idempotency_key: chat_request.idempotency_key
     ) do |event:, data:|
       case event
-      when 'chunk'
-        delta = data['content'].to_s
+      when "chunk"
+        delta = data["content"].to_s
         next if delta.empty?
         accumulated << delta
         ai_message.update!(content: accumulated)
-      when 'done'
-        chat_request.update!(status: 'done')
-      when 'error'
-        chat_request.update!(status: 'error', error: data['message'].to_s.presence || 'stream error')
-        ai_message.update!(content: 'Извините, произошла ошибка при генерации ответа.') if ai_message.content.blank?
+      when "done"
+        chat_request.update!(status: "done")
+      when "error"
+        chat_request.update!(status: "error", error: data["message"].to_s.presence || "stream error")
+        ai_message.update!(content: "Извините, произошла ошибка при генерации ответа.") if ai_message.content.blank?
       end
     end
   rescue StandardError => e
-    chat_request&.update!(status: 'error', error: e.message) rescue nil
+    chat_request&.update!(status: "error", error: e.message) rescue nil
   end
 end

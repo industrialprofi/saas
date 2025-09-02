@@ -33,7 +33,7 @@ class MessagesController < ApplicationController
         user: current_user,
         idempotency_key: idempotency_key,
         last_user_message_id: @message.id,
-        status: 'pending'
+        status: "pending"
       )
 
       Ai::StreamJob.perform_later(
