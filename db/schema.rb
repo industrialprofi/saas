@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_02_194803) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_02_200000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "chat_requests", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "idempotency_key", null: false
+    t.bigint "last_user_message_id", null: false
+    t.string "status", default: "pending", null: false
+    t.string "error"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["idempotency_key"], name: "index_chat_requests_on_idempotency_key", unique: true
+    t.index ["user_id"], name: "index_chat_requests_on_user_id"
+  end
 
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -84,6 +96,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_02_194803) do
     t.index ["subscription_plan"], name: "index_users_on_subscription_plan"
   end
 
+  add_foreign_key "chat_requests", "users"
   add_foreign_key "messages", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"

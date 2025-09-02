@@ -2,6 +2,8 @@
 # Публикует JWKS (JSON Web Key Set) с публичным RSA ключом для верификации JWT
 # FastAPI будет забирать ключ по /.well-known/jwks.json
 
+require 'base64'
+
 class OAuth::JwksController < ApplicationController
   # JWKS должен быть публичным и кэшируемым; аутентификация не требуется
   skip_before_action :verify_authenticity_token

@@ -1,10 +1,12 @@
 class Message < ApplicationRecord
   belongs_to :user, optional: true
-  validates :content, presence: true
+  # Для AI-плейсхолдера допускаем пустой контент, чтобы обновлять его по стриму
+  validates :content, presence: true, unless: -> { user_type == "ai" }
   validates :user_type, presence: true, inclusion: { in: [ "user", "ai" ] }
 
   # Броадкаст сообщений через Turbo Streams
   after_create_commit -> { broadcast_append_to "messages" }
+  after_update_commit -> { broadcast_replace_to "messages" }
 
   # Сортировка по времени создания (новые внизу)
   scope :ordered, -> { order(created_at: :asc) }
