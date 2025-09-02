@@ -1,0 +1,14 @@
+<%# Добавляем сообщение пользователя в чат %>
+<%= turbo_stream.append "messages" do %>
+  <%= render "messages/message", message: @message %>
+<% end %>
+
+<%# Добавляем ответ AI в чат %>
+<%= turbo_stream.append "messages" do %>
+  <%= render "messages/message", message: @ai_message %>
+<% end %>
+
+<%# Сбрасываем форму %>
+<%= turbo_stream.replace "message_form" do %>
+  <%= render "messages/form", message: Message.new %>
+<% end %>

@@ -1,0 +1,16 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+welcome:
+  content: "Привет! Я ваш AI-ассистент. Чем я могу вам помочь сегодня?"
+  user_type: ai
+  created_at: <%= 10.minutes.ago.to_s(:db) %>
+
+user_question:
+  content: "Расскажи мне о возможностях этого сервиса"
+  user_type: user
+  created_at: <%= 9.minutes.ago.to_s(:db) %>
+
+ai_response:
+  content: "Наш сервис предлагает продвинутый AI-чат с возможностью решения различных задач: от ответов на вопросы до помощи с кодом, переводами и творческими задачами."
+  user_type: ai
+  created_at: <%= 8.minutes.ago.to_s(:db) %>

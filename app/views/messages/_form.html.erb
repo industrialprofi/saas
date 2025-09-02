@@ -1,0 +1,21 @@
+<%= form_with model: message, id: "message_form", class: "mt-4", data: { controller: "reset-form", action: "turbo:submit-end->reset-form#reset" } do |form| %>
+  <div class="flex flex-col space-y-2">
+    <div class="flex items-center space-x-2">
+      <%= form.text_field :content, 
+        class: "flex-1 bg-gray-50 border #{message.errors[:content].any? ? 'border-red-500' : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", 
+        placeholder: "Введите ваше сообщение...",
+        required: true,
+        autocomplete: "off" %>
+      <%= form.submit "Отправить", 
+        class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800",
+        data: { disable_with: "<i class='fas fa-spinner fa-spin'></i> Отправка..." } %>
+    </div>
+    <% if message.errors.any? %>
+      <div class="text-red-500 text-sm">
+        <% message.errors.full_messages.each do |error| %>
+          <p><%= error %></p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
