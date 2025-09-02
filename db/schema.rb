@@ -32,8 +32,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_02_101504) do
     t.datetime "updated_at", null: false
     t.string "provider"
     t.string "uid"
+    t.integer "subscription_plan", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["subscription_plan"], name: "index_users_on_subscription_plan"
   end
 end
