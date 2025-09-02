@@ -1,0 +1,27 @@
+<% if message.user_type == 'user' %>
+  <div class="flex items-start gap-2.5 justify-end mb-4" id="<%= dom_id(message) %>">
+    <div class="flex flex-col gap-1 w-full max-w-[80%]">
+      <div class="flex items-center justify-end space-x-2 rtl:space-x-reverse">
+        <span class="text-xs font-normal text-gray-500 dark:text-gray-400"><%= message.created_at.strftime("%H:%M") %></span>
+        <span class="text-sm font-semibold text-gray-900 dark:text-white">Вы</span>
+      </div>
+      <div class="flex flex-col leading-1.5 p-4 border-gray-200 bg-blue-600 rounded-s-xl rounded-ee-xl dark:bg-blue-500">
+        <p class="text-sm font-normal text-white"><%= message.content %></p>
+      </div>
+    </div>
+    <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="User avatar">
+  </div>
+<% else %>
+  <div class="flex items-start gap-2.5 mb-4" id="<%= dom_id(message) %>">
+    <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg" alt="AI avatar">
+    <div class="flex flex-col gap-1 w-full max-w-[80%]">
+      <div class="flex items-center space-x-2 rtl:space-x-reverse">
+        <span class="text-sm font-semibold text-gray-900 dark:text-white">AI Ассистент</span>
+        <span class="text-xs font-normal text-gray-500 dark:text-gray-400"><%= message.created_at.strftime("%H:%M") %></span>
+      </div>
+      <div class="flex flex-col leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
+        <p class="text-sm font-normal text-gray-900 dark:text-white"><%= message.content %></p>
+      </div>
+    </div>
+  </div>
+<% end %>

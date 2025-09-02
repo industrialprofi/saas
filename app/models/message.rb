@@ -1,0 +1,27 @@
+class Message < ApplicationRecord
+  validates :content, presence: true
+  validates :user_type, presence: true, inclusion: { in: ['user', 'ai'] }
+  
+  # Броадкаст сообщений через Turbo Streams
+  after_create_commit -> { broadcast_append_to "messages" }
+  
+  # Сортировка по времени создания (новые внизу)
+  scope :ordered, -> { order(created_at: :asc) }
+  
+  # Последние N сообщений
+  scope :recent, ->(limit = 20) { ordered.limit(limit) }
+  
+  # Сообщения от пользователя
+  scope :from_user, -> { where(user_type: 'user') }
+  
+  # Сообщения от AI
+  scope :from_ai, -> { where(user_type: 'ai') }
+  
+  # Очистка старых сообщений
+  def self.cleanup_old_messages(keep_count = 100)
+    return unless count > keep_count
+    
+    ids_to_keep = ordered.last(keep_count).pluck(:id)
+    where.not(id: ids_to_keep).delete_all
+  end
+end

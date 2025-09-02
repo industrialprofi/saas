@@ -11,62 +11,28 @@
     
     <!-- Чат с AI -->
     <div class="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800 p-4 mb-8">
+      <!-- Заголовок чата -->
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Чат с AI</h2>
+        <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Онлайн</span>
+      </div>
+      
       <!-- Сообщения чата -->
-      <div class="space-y-4 mb-4 h-96 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-        <!-- Сообщение от AI -->
-        <div class="flex items-start gap-2.5">
-          <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg" alt="AI avatar">
-          <div class="flex flex-col gap-1 w-full max-w-[320px]">
-            <div class="flex items-center space-x-2 rtl:space-x-reverse">
-              <span class="text-sm font-semibold text-gray-900 dark:text-white">AI Ассистент</span>
-              <span class="text-sm font-normal text-gray-500 dark:text-gray-400">11:46</span>
-            </div>
-            <div class="flex flex-col leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
-              <p class="text-sm font-normal text-gray-900 dark:text-white">Привет! Я ваш AI-ассистент. Чем я могу вам помочь сегодня?</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Сообщение от пользователя -->
-        <div class="flex items-start gap-2.5 justify-end">
-          <div class="flex flex-col gap-1 w-full max-w-[320px]">
-            <div class="flex items-center justify-end space-x-2 rtl:space-x-reverse">
-              <span class="text-sm font-normal text-gray-500 dark:text-gray-400">11:47</span>
-              <span class="text-sm font-semibold text-gray-900 dark:text-white">Вы</span>
-            </div>
-            <div class="flex flex-col leading-1.5 p-4 border-gray-200 bg-blue-600 rounded-s-xl rounded-ee-xl dark:bg-blue-500">
-              <p class="text-sm font-normal text-white">Привет! Расскажи мне о возможностях этого сервиса.</p>
-            </div>
-          </div>
-          <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="User avatar">
-        </div>
-
-        <!-- Сообщение от AI -->
-        <div class="flex items-start gap-2.5">
-          <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg" alt="AI avatar">
-          <div class="flex flex-col gap-1 w-full max-w-[320px]">
-            <div class="flex items-center space-x-2 rtl:space-x-reverse">
-              <span class="text-sm font-semibold text-gray-900 dark:text-white">AI Ассистент</span>
-              <span class="text-sm font-normal text-gray-500 dark:text-gray-400">11:48</span>
-            </div>
-            <div class="flex flex-col leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
-              <p class="text-sm font-normal text-gray-900 dark:text-white">Конечно! Наш сервис предлагает продвинутый AI-чат с возможностью решения различных задач: от ответов на вопросы до помощи с кодом, переводами и творческими задачами. Вы можете использовать его для обучения, работы или просто для интересных бесед. Что именно вас интересует?</p>
-            </div>
-          </div>
-        </div>
+      <div id="messages" class="space-y-4 mb-4 h-96 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-700 rounded-lg" data-controller="chat-scroll">
+        <% if Message.count == 0 %>
+          <!-- Приветственное сообщение, если нет других сообщений -->
+          <% welcome_message = Message.create(content: "Привет! Я ваш AI-ассистент. Чем я могу вам помочь сегодня?", user_type: "ai") %>
+          <%= render "messages/message", message: welcome_message %>
+        <% else %>
+          <!-- Отображаем последние 20 сообщений -->
+          <% Message.ordered.last(20).each do |message| %>
+            <%= render "messages/message", message: message %>
+          <% end %>
+        <% end %>
       </div>
 
       <!-- Форма отправки сообщения -->
-      <form class="flex items-center">
-        <div class="relative w-full">
-          <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Напишите сообщение..." required>
-          <button type="submit" class="absolute inset-y-0 end-0 flex items-center pe-3">
-            <svg class="w-5 h-5 text-gray-500 dark:text-gray-400 rotate-90" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
-              <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z"/>
-            </svg>
-          </button>
-        </div>
-      </form>
+      <%= render "messages/form", message: Message.new %>
     </div>
 
   </div>
