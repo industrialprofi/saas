@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ChatRequest < ApplicationRecord
   belongs_to :user
 

@@ -1,19 +1,20 @@
 # frozen_string_literal: true
+
 # Simple SSE client for FastAPI chat streaming
 # Отвечает за открытие стриминга, передачу контекста и разбор SSE событий.
 
-require 'net/http'
-require 'uri'
-require 'json'
+require "net/http"
+require "uri"
+require "json"
 
 module Ai
   class Client
     DEFAULT_TIMEOUT = 30 # seconds
 
-    def initialize(base_url: ENV.fetch('FASTAPI_BASE_URL', nil), timeout: DEFAULT_TIMEOUT)
-      raise ArgumentError, 'FASTAPI_BASE_URL is not set' if base_url.to_s.empty?
+    def initialize(base_url: ENV.fetch("FASTAPI_BASE_URL", nil), timeout: DEFAULT_TIMEOUT)
+      raise ArgumentError, "FASTAPI_BASE_URL is not set" if base_url.to_s.empty?
 
-      @base_url = base_url.chomp('/')
+      @base_url = base_url.chomp("/")
       @timeout = timeout
     end
 
@@ -24,21 +25,21 @@ module Ai
     # - request_id: String
     # - idempotency_key: String (UUID)
     # - scope: String (space-delimited scopes), default 'ai:chat'
-    def stream_chat(messages:, user:, request_id:, idempotency_key:, scope: 'ai:chat')
+    def stream_chat(messages:, user:, request_id:, idempotency_key:, scope: "ai:chat")
       uri = URI.parse("#{@base_url}/v1/chat/stream")
 
       http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = uri.scheme == 'https'
+      http.use_ssl = uri.scheme == "https"
       http.open_timeout = @timeout
       http.read_timeout = @timeout
 
       req = Net::HTTP::Post.new(uri.request_uri)
-      req['Accept'] = 'text/event-stream'
-      req['Content-Type'] = 'application/json'
-      req['X-Request-ID'] = request_id.to_s
-      req['Idempotency-Key'] = idempotency_key.to_s
-      req['Accept-Language'] = 'ru'
-      req['Authorization'] = "Bearer #{issue_client_credentials_token(scope: scope)}"
+      req["Accept"] = "text/event-stream"
+      req["Content-Type"] = "application/json"
+      req["X-Request-ID"] = request_id.to_s
+      req["Idempotency-Key"] = idempotency_key.to_s
+      req["Accept-Language"] = "ru"
+      req["Authorization"] = "Bearer #{issue_client_credentials_token(scope: scope)}"
 
       body = {
         messages: messages,
@@ -54,13 +55,13 @@ module Ai
           err = begin
             JSON.parse(res.body)
           rescue StandardError
-            { 'message' => res.message }
+            { "message" => res.message }
           end
-          yield(event: 'error', data: { 'code' => res.code, 'message' => err['message'] })
+          yield(event: "error", data: { "code" => res.code, "message" => err["message"] })
           next
         end
 
-        buffer = +''
+        buffer = +""
         res.read_body do |chunk|
           buffer << chunk
 
@@ -75,18 +76,18 @@ module Ai
         end
       end
     rescue Net::OpenTimeout, Net::ReadTimeout
-      yield(event: 'error', data: { 'code' => 'timeout', 'message' => 'Превышен таймаут стрима (30s).' })
+      yield(event: "error", data: { "code" => "timeout", "message" => "Превышен таймаут стрима (30s)." })
     rescue StandardError => e
-      yield(event: 'error', data: { 'code' => 'client_error', 'message' => e.message })
+      yield(event: "error", data: { "code" => "client_error", "message" => e.message })
     end
 
     private
 
     # Генерируем OAuth токен по client_credentials через Doorkeeper
     # Примечание: для простоты используем Doorkeeper::AccessToken без сети (локально)
-    def issue_client_credentials_token(scope: 'ai:chat')
-      app = Doorkeeper::Application.find_by(name: 'fastapi-internal') || Doorkeeper::Application.first
-      raise 'Create a Doorkeeper application for FastAPI (e.g., name: fastapi-internal)' unless app
+    def issue_client_credentials_token(scope: "ai:chat")
+      app = Doorkeeper::Application.find_by(name: "fastapi-internal") || Doorkeeper::Application.first
+      raise "Create a Doorkeeper application for FastAPI (e.g., name: fastapi-internal)" unless app
 
       token = Doorkeeper::AccessToken.find_or_create_for(
         application: app,
@@ -104,11 +105,11 @@ module Ai
       data_json = nil
       frame.each_line do |line|
         line = line.strip
-        next if line.empty? || line.start_with?(':')
-        if line.start_with?('event:')
-          event = line.sub('event:', '').strip
-        elsif line.start_with?('data:')
-          data_json = line.sub('data:', '').strip
+        next if line.empty? || line.start_with?(":")
+        if line.start_with?("event:")
+          event = line.sub("event:", "").strip
+        elsif line.start_with?("data:")
+          data_json = line.sub("data:", "").strip
         end
       end
 
@@ -118,7 +119,7 @@ module Ai
         nil
       end
 
-      [event, data]
+      [ event, data ]
     end
   end
 end
