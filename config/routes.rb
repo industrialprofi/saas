@@ -18,4 +18,7 @@ Rails.application.routes.draw do
   get "pricing", to: "home#pricing"
   get "support", to: "home#support"
   get "telegram-login", to: "auth#telegram_login"
+
+  # Личный кабинет /subscription
+  get "subscription", to: "subscription#show"
 end

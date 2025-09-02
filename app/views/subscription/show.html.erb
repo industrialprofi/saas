@@ -1,0 +1,53 @@
+<% content_for :title, 'Аккаунт' %>
+
+<header class="bg-white dark:bg-gray-900">
+  <%= render partial: 'shared/navbar' %>
+</header>
+
+<main class="min-h-[70vh] bg-gray-50 dark:bg-gray-900 py-12">
+  <div class="max-w-screen-md mx-auto px-4">
+    <div class="mb-6">
+      <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">Аккаунт</h1>
+      <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Информация о вашей подписке и профиле</p>
+    </div>
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">Поле</th>
+            <th scope="col" class="px-6 py-3">Значение</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">ID аккаунта</th>
+            <td class="px-6 py-4"><%= @user.id %></td>
+          </tr>
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Способ входа</th>
+            <td class="px-6 py-4">
+              <% provider_label = case @user.provider
+                 when 'telegram' then 'Telegram'
+                 when nil, '' then 'Email'
+                 else @user.provider.to_s.titleize
+                 end %>
+              <%= provider_label %>
+            </td>
+          </tr>
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Дата регистрации</th>
+            <td class="px-6 py-4"><%= l(@user.created_at, format: :long) %></td>
+          </tr>
+          <tr class="bg-white dark:bg-gray-800">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Тариф</th>
+            <td class="px-6 py-4">
+              <%# Placeholder: extend later with real subscription logic %>
+              <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-900 dark:text-green-200 dark:ring-green-700/40">Бесплатный</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
