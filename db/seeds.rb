@@ -1,9 +1,37 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# Seeds for development/test. Idempotent.
+# Load with: bin/rails db:seed
+
+require 'securerandom'
+
+ActiveRecord::Base.transaction do
+  puts 'Seeding users...'
+
+  users = [
+    { email: 'user1@example.com', password: 'password123' },
+    { email: 'user2@example.com', password: 'password123' },
+    { email: 'user3@example.com', password: 'password123' },
+  ]
+
+  users.each do |attrs|
+    u = User.find_or_initialize_by(email: attrs[:email])
+    u.password = attrs[:password] if attrs[:password].present?
+    u.save!
+    puts "  ✓ #{u.email}"
+  end
+
+  telegram_users = [
+    { email: 'telegram_1001@example.com', provider: 'telegram', uid: '1001' },
+    { email: 'telegram_1002@example.com', provider: 'telegram', uid: '1002' },
+  ]
+
+  telegram_users.each do |attrs|
+    u = User.find_or_initialize_by(email: attrs[:email])
+    u.provider = attrs[:provider]
+    u.uid = attrs[:uid]
+    u.password = SecureRandom.hex(12) if u.encrypted_password.blank?
+    u.save!
+    puts "  ✓ #{u.email} (#{u.provider}:#{u.uid})"
+  end
+
+  puts 'Done.'
+end

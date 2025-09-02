@@ -1,0 +1,50 @@
+<%= render 'shared/navbar' %>
+<main class="min-h-[70vh] bg-gray-50 dark:bg-gray-900 py-12">
+  <div class="mx-auto max-w-md px-4">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">Вход по Email</h1>
+      <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Введите данные вашей учетной записи</p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <%= render 'devise/shared/error_messages', resource: resource %>
+
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <div class="space-y-5">
+          <div>
+            <%= f.label :email, 'Email', class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+            <%= f.email_field :email, autofocus: true, autocomplete: 'email', placeholder: 'you@example.com', class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white' %>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <%= f.label :password, 'Пароль', class: 'text-sm font-medium text-gray-900 dark:text-white' %>
+              <%= link_to 'Забыли пароль?', new_password_path(resource_name), class: 'text-sm text-blue-600 hover:underline dark:text-blue-400' if devise_mapping.recoverable? %>
+            </div>
+            <%= f.password_field :password, autocomplete: 'current-password', placeholder: '••••••••', class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white' %>
+          </div>
+
+          <% if devise_mapping.rememberable? %>
+            <div class="flex items-center">
+              <%= f.check_box :remember_me, class: 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600' %>
+              <%= f.label :remember_me, 'Запомнить меня', class: 'ml-2 text-sm text-gray-700 dark:text-gray-300' %>
+            </div>
+          <% end %>
+
+          <div>
+            <%= f.submit 'Войти', class: 'w-full inline-flex justify-center items-center rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800' %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200 dark:border-gray-700"></div></div>
+        <div class="relative flex justify-center"><span class="bg-white dark:bg-gray-800 px-3 text-xs uppercase tracking-wider text-gray-500">или</span></div>
+      </div>
+
+      <div class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+        <%= render 'devise/shared/links' %>
+      </div>
+    </div>
+  </div>
+</main>
