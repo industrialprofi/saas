@@ -19,6 +19,12 @@ gem "tailwindcss-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# OAuth provider and JWT support
+# doorkeeper: OAuth 2.0 provider for Rails
+# doorkeeper-jwt: issue access tokens as JWT that FastAPI can verify via JWKS
+gem "doorkeeper", "~> 5.6"
+gem "doorkeeper-jwt", "~> 0.4.2"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 
