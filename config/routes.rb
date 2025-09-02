@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
+
+  # OAuth 2.0 provider endpoints (access tokens, applications, etc.)
+  use_doorkeeper
   resources :messages, only: [ :create ]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -24,4 +27,8 @@ Rails.application.routes.draw do
 
   # История чатов за 30 дней
   get "history", to: "history#index"
+
+  # JWKS endpoint for FastAPI to verify JWTs (public keys). Must be accessible over HTTPS.
+  # Example: GET /.well-known/jwks.json
+  get ".well-known/jwks.json", to: "oauth/jwks#show"
 end
