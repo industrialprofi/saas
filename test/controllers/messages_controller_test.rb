@@ -6,8 +6,8 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:two)
 
     assert_difference "Message.count", 2 do
-      # user message + AI response
-      post messages_path, params: { message: { content: "Hello from test" } }
+      # user message + AI placeholder (streamed later)
+      post messages_path, params: { message: { content: "Привет, как дела?" } }
     end
 
     assert_redirected_to root_path

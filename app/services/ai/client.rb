@@ -28,52 +28,64 @@ module Ai
     def stream_chat(messages:, user:, request_id:, idempotency_key:, scope: "ai:chat")
       uri = URI.parse("#{@base_url}/v1/chat/stream")
 
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = uri.scheme == "https"
-      http.open_timeout = @timeout
-      http.read_timeout = @timeout
+      # До 2 повторов на сетевые/5xx ошибки, но в рамках общего SLA
+      attempts = 0
+      begin
+        attempts += 1
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = uri.scheme == "https"
+        http.open_timeout = [ 7, @timeout ].min
+        http.read_timeout = @timeout
 
-      req = Net::HTTP::Post.new(uri.request_uri)
-      req["Accept"] = "text/event-stream"
-      req["Content-Type"] = "application/json"
-      req["X-Request-ID"] = request_id.to_s
-      req["Idempotency-Key"] = idempotency_key.to_s
-      req["Accept-Language"] = "ru"
-      req["Authorization"] = "Bearer #{issue_client_credentials_token(scope: scope)}"
+        req = Net::HTTP::Post.new(uri.request_uri)
+        req["Accept"] = "text/event-stream"
+        req["Content-Type"] = "application/json"
+        req["X-Request-ID"] = request_id.to_s
+        req["Idempotency-Key"] = idempotency_key.to_s
+        req["Accept-Language"] = "ru"
+        req["Authorization"] = "Bearer #{issue_client_credentials_token(scope: scope)}"
 
-      body = {
-        messages: messages,
-        user: user,
-        params: { temperature: 0.7, max_tokens: 500 }
-      }
-      req.body = JSON.dump(body)
+        body = {
+          messages: messages,
+          user: user,
+          params: {
+            temperature: ENV.fetch("AI_TEMPERATURE", 0.7).to_f,
+            max_tokens: ENV.fetch("AI_MAX_TOKENS", 500).to_i
+          }
+        }
+        req.body = JSON.dump(body)
 
-      http.request(req) do |res|
-        # Валидация статуса до начала стрима
-        unless res.is_a?(Net::HTTPSuccess)
-          # Пробуем распарсить ошибку
-          err = begin
-            JSON.parse(res.body)
-          rescue StandardError
-            { "message" => res.message }
+        http.request(req) do |res|
+          unless res.is_a?(Net::HTTPSuccess)
+            err = begin
+              JSON.parse(res.body)
+            rescue StandardError
+              { "message" => res.message }
+            end
+            yield(event: "error", data: { "code" => res.code, "message" => err["message"] })
+            return
           end
-          yield(event: "error", data: { "code" => res.code, "message" => err["message"] })
-          next
-        end
 
-        buffer = +""
-        res.read_body do |chunk|
-          buffer << chunk
+          buffer = +""
+          res.read_body do |chunk|
+            buffer << chunk
 
-          # SSE фреймы разделены двойным переводом строки
-          while (idx = buffer.index("\n\n"))
-            frame = buffer.slice!(0..idx)
-            event, data = parse_sse_frame(frame)
-            next if event.nil? && data.nil?
-
-            yield(event: event, data: data)
+            while (sep = buffer.index("\n\n"))
+              frame = buffer.slice!(0..sep + 1)
+              event, data = parse_sse_frame(frame)
+              next unless event
+              yield(event: event, data: data)
+            end
           end
         end
+      rescue Net::OpenTimeout, Net::ReadTimeout
+        raise if attempts > 2
+        sleep(0.5 * attempts)
+        retry
+      rescue Errno::ECONNREFUSED, SocketError, EOFError => e
+        raise if attempts > 2
+        sleep(0.5 * attempts)
+        retry
       end
     rescue Net::OpenTimeout, Net::ReadTimeout
       yield(event: "error", data: { "code" => "timeout", "message" => "Превышен таймаут стрима (30s)." })
@@ -102,20 +114,21 @@ module Ai
     # Parse SSE frame lines: event: <name>, data: <json>
     def parse_sse_frame(frame)
       event = nil
-      data_json = nil
-      frame.each_line do |line|
-        line = line.strip
+      data_lines = []
+      frame.each_line do |raw|
+        line = raw.chomp
         next if line.empty? || line.start_with?(":")
         if line.start_with?("event:")
           event = line.sub("event:", "").strip
         elsif line.start_with?("data:")
-          data_json = line.sub("data:", "").strip
+          data_lines << line.sub("data:", "").lstrip
         end
       end
 
       data = begin
-        data_json ? JSON.parse(data_json) : nil
-      rescue StandardError
+        payload = data_lines.join("\n")
+        payload.empty? ? nil : JSON.parse(payload)
+      rescue JSON::ParserError
         nil
       end
 

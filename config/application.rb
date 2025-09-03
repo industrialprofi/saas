@@ -27,5 +27,8 @@ module Saas
     # I18n
     config.i18n.available_locales = [ :ru, :en ]
     config.i18n.default_locale = :ru
+
+    # Security middleware
+    config.middleware.use Rack::Attack
   end
 end
