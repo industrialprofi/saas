@@ -21,10 +21,20 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     assert_match /sign_in|sign-up|users\/sign_in/, @response.redirect_url
   end
 
-  test "free user is redirected to pricing by Pundit rescue" do
-    sign_in users(:one) # free
-    assert_no_difference "Message.count" do
+  test "free user within quota can create message" do
+    sign_in users(:one) # free, 0 used today
+    assert_difference "Message.count", 2 do
       post messages_path, params: { message: { content: "Привет" } }
+    end
+    assert_redirected_to root_path
+  end
+
+  test "free user over quota is redirected to pricing by Pundit rescue" do
+    sign_in users(:one) # free
+    # exhaust quota: create 3 user messages for today
+    3.times { Message.create!(user: users(:one), user_type: "user", content: "x") }
+    assert_no_difference "Message.count" do
+      post messages_path, params: { message: { content: "Превышение" } }
     end
     assert_redirected_to pricing_path
     assert_equal "Доступ доступен только по платной подписке.", flash[:alert]

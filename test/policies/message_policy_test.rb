@@ -9,8 +9,15 @@ class MessagePolicyTest < ActiveSupport::TestCase
     refute policy(nil).create?
   end
 
-  test "free user cannot create" do
-    refute policy(users(:one)).create?
+  test "free user within quota can create" do
+    user = users(:one)
+    assert policy(user).create?
+  end
+
+  test "free user over quota cannot create" do
+    user = users(:one)
+    3.times { Message.create!(user: user, user_type: "user", content: "x") }
+    refute policy(user).create?
   end
 
   test "paid user can create" do
