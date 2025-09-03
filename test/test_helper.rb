@@ -1,6 +1,7 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
+require "webmock/minitest"
 
 module ActiveSupport
   class TestCase
@@ -18,3 +19,6 @@ end
 class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 end
+
+# Запрещаем внешние HTTP-соединения в тестах, кроме localhost
+WebMock.disable_net_connect!(allow_localhost: true)
