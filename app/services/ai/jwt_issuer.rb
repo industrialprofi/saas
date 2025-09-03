@@ -10,9 +10,7 @@ module Ai
     DEFAULT_TTL = 60 # seconds
 
     def self.issue(sub:, aud:, request_id:, ttl: DEFAULT_TTL)
-      private_key_path = Rails.root.join('config/jwt/private.pem')
-      private_pem = File.read(private_key_path)
-      key = OpenSSL::PKey::RSA.new(private_pem)
+      key = rsa_private_key
       now = Time.now.to_i
 
       payload = {
@@ -24,7 +22,7 @@ module Ai
         jti: request_id
       }
 
-      headers = { kid: key_id(key) }
+      headers = { kid: rsa_kid }
 
       JWT.encode(payload, key, 'RS256', headers)
     end
@@ -33,9 +31,20 @@ module Ai
       ENV.fetch('JWT_ISS', 'rails-saas')
     end
 
-    def self.key_id(key)
-      pub = key.public_key.to_pem
-      Digest::SHA1.hexdigest(pub)[0, 16]
+    class << self
+      private
+
+      def rsa_private_key
+        @rsa_private_key ||= begin
+          private_key_path = Rails.root.join('config/jwt/private.pem')
+          private_pem = File.read(private_key_path)
+          OpenSSL::PKey::RSA.new(private_pem)
+        end
+      end
+
+      def rsa_kid
+        @rsa_kid ||= Digest::SHA1.hexdigest(rsa_private_key.public_key.to_pem)[0, 16]
+      end
     end
   end
 end

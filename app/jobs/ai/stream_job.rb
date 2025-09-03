@@ -21,8 +21,9 @@ class Ai::StreamJob < ApplicationJob
     ] + history.map { |m| { role: (m.user_type == "user" ? "user" : "assistant"), content: m.content.to_s } }
 
     client = Ai::Client.new
-    accumulated = +" "
+    accumulated = +""
 
+    chat_request.update!(status: "running")
     client.stream_chat(
       messages: messages_payload,
       user: { id: user.id, sub: user.id.to_s, email: user.email, plan: user.subscription_plan },
