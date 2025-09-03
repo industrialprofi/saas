@@ -1,0 +1,98 @@
+version: "3.9"
+
+# Production-oriented docker-compose for Rails (web + worker) and FastAPI microservice.
+# - Rails image is built from the local Dockerfile (multi-stage, production).
+# - Postgres 16 as DB for Rails and Solid Queue.
+# - FastAPI service is included to run alongside Rails; adjust image to your registry.
+# - Internal DNS names:
+#   * web      -> Rails app (port 80 inside container)
+#   * worker   -> Solid Queue worker
+#   * db       -> Postgres 16
+#   * fastapi  -> FastAPI app (port 8000 inside container)
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: saas_production
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d saas_production"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  web:
+    build: .
+    # The Dockerfile runs Rails server via thruster. Ensure Rails listens on port 80.
+    environment:
+      RAILS_ENV: production
+      RAILS_LOG_TO_STDOUT: "1"
+      RAILS_SERVE_STATIC_FILES: "1"
+      # Make rails server listen on port 80 (puma fallback uses ENV PORT if present)
+      PORT: "80"
+      # DB connection for ActiveRecord and Solid Queue
+      DATABASE_URL: postgres://postgres:postgres@db:5432/saas_production
+      # Rails master key (provide via .env or deployment secret store)
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      # URL for Ai::Client to reach FastAPI inside the compose network
+      FASTAPI_BASE_URL: ${FASTAPI_BASE_URL:-http://fastapi:8000}
+      # Optional AI params with sensible defaults
+      AI_TEMPERATURE: ${AI_TEMPERATURE:-0.7}
+      AI_MAX_TOKENS: ${AI_MAX_TOKENS:-500}
+    depends_on:
+      db:
+        condition: service_healthy
+      fastapi:
+        condition: service_started
+    ports:
+      - "80:80"
+    volumes:
+      - storage_data:/rails/storage
+    restart: unless-stopped
+
+  worker:
+    build: .
+    command: ["./bin/thrust", "./bin/rails", "solid_queue:start"]
+    environment:
+      RAILS_ENV: production
+      RAILS_LOG_TO_STDOUT: "1"
+      RAILS_SERVE_STATIC_FILES: "1"
+      DATABASE_URL: postgres://postgres:postgres@db:5432/saas_production
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      FASTAPI_BASE_URL: ${FASTAPI_BASE_URL:-http://fastapi:8000}
+      AI_TEMPERATURE: ${AI_TEMPERATURE:-0.7}
+      AI_MAX_TOKENS: ${AI_MAX_TOKENS:-500}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - storage_data:/rails/storage
+    restart: unless-stopped
+
+  fastapi:
+    # Replace with your FastAPI image. Example: ghcr.io/your-org/fastapi-chat:latest
+    image: ghcr.io/your-org/fastapi-chat:latest
+    # If building locally, comment the image above and uncomment the build section:
+    # build:
+    #   context: ./fastapi
+    #   dockerfile: Dockerfile
+    environment:
+      # If FastAPI needs to verify JWTs from Rails, it can fetch JWKS here:
+      RAILS_JWKS_URL: http://web/.well-known/jwks.json
+      # Optional settings
+      UVICORN_WORKERS: "2"
+    expose:
+      - "8000"
+    # Uncomment to expose FastAPI to host for debugging:
+    # ports:
+    #   - "8000:8000"
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  storage_data:
