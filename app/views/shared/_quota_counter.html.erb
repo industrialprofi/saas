@@ -1,0 +1,4 @@
+<%# Renders the requests quota counter with proper classes and a fixed id for Turbo updates %>
+<div id="quota_counter" class="<%= quota_text_classes(current_user) %>">
+  <%= quota_label(current_user) %>
+</div>

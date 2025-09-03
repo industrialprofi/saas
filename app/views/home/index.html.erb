@@ -36,9 +36,7 @@
 
       <!-- Daily requests counter for any signed-in user -->
       <% if user_signed_in? %>
-        <div class="<%= quota_text_classes(current_user) %>">
-          <%= quota_label(current_user) %>
-        </div>
+        <%= render "shared/quota_counter" %>
       <% end %>
     </div>
 
