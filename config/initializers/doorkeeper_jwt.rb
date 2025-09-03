@@ -51,5 +51,5 @@ Doorkeeper::JWT.configure do
   # Подписываем приватным ключом RSA
   # На первом этапе kid не добавляем; ротация ключей планируется раз в 90 дней
   secret_key { JwtKeyLoader.private_key }
-  encryption_method :rs256
+  signing_method :rs256
 end

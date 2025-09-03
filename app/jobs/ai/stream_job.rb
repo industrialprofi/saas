@@ -6,13 +6,13 @@
 class Ai::StreamJob < ApplicationJob
   queue_as :default
 
-  # params: user_id:, last_user_message_id:, chat_request_id:, request_id:
-  def perform(user_id:, last_user_message_id:, chat_request_id:, request_id:)
+  # params: user_id:, last_user_message_id:, chat_request_id:, request_id:, ai_message_id: (optional)
+  def perform(user_id:, last_user_message_id:, chat_request_id:, request_id:, ai_message_id: nil)
     user = User.find(user_id)
     chat_request = ChatRequest.find(chat_request_id)
 
-    # Создаем AI-плейсхолдер
-    ai_message = Message.create!(user: user, user_type: "ai", content: "")
+    # Используем существующий плейсхолдер, либо создаем новый (fallback)
+    ai_message = ai_message_id ? Message.find(ai_message_id) : Message.create!(user: user, user_type: "ai", content: "")
 
     # Собираем последние 10 сообщений пользователя (user/ai)
     history = Message.where(user: user).ordered.last(10)

@@ -27,6 +27,9 @@ class MessagesController < ApplicationController
     end
 
     if @message.save
+      # Создаем AI-плейсхолдер сразу для лучшего UX
+      ai_placeholder = Message.create!(user: current_user, user_type: "ai", content: "")
+
       # Создаем запись запроса с Idempotency-Key и запускаем стриминг в фоне
       idempotency_key = SecureRandom.uuid
       chat_request = ChatRequest.create!(
@@ -40,7 +43,8 @@ class MessagesController < ApplicationController
         user_id: current_user.id,
         last_user_message_id: @message.id,
         chat_request_id: chat_request.id,
-        request_id: request.request_id
+        request_id: request.request_id,
+        ai_message_id: ai_placeholder.id
       )
 
       respond_to do |format|

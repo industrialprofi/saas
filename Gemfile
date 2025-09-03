@@ -82,3 +82,6 @@ gem "omniauth-telegram", "~> 0.2.1"
 
 # Authorization
 gem "pundit", "~> 2.3"
+
+# Protection: rate limiting & safelist/blacklist
+gem "rack-attack"

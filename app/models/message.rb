@@ -8,6 +8,10 @@ class Message < ApplicationRecord
   after_create_commit -> { broadcast_append_to "messages" }
   after_update_commit -> { broadcast_replace_to "messages" }
 
+  # Персонифицированные стримы: [user, :messages]
+  after_create_commit -> { broadcast_append_to [ user || :guest, :messages ] }
+  after_update_commit -> { broadcast_replace_to [ user || :guest, :messages ] }
+
   # Сортировка по времени создания (новые внизу)
   scope :ordered, -> { order(created_at: :asc) }
 
