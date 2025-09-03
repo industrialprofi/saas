@@ -33,6 +33,13 @@
 
       <!-- Форма отправки сообщения -->
       <%= render "messages/form", message: Message.new %>
+
+      <!-- Free plan daily requests counter -->
+      <% if user_signed_in? && current_user.subscription_plan_free? %>
+        <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+          <%= free_quota_label(current_user) %>
+        </div>
+      <% end %>
     </div>
 
     <!-- Upgrade Note -->
