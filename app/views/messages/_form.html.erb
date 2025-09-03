@@ -7,12 +7,14 @@
                 submit_lock_remaining_value: (current_user&.requests_remaining || 0)
               } do |form| %>
   <div class="flex flex-col space-y-2">
-    <div class="flex items-center space-x-2">
-      <%= form.text_field :content, 
-        class: "flex-1 bg-gray-50 border #{message.errors[:content].any? ? 'border-red-500' : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", 
+    <div class="flex items-end space-x-2">
+      <%= form.text_area :content,
+        rows: 1,
+        class: "w-full bg-gray-50 border #{message.errors[:content].any? ? 'border-red-500' : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 resize-none overflow-hidden", 
         placeholder: "Введите ваше сообщение...",
         required: true,
-        autocomplete: "off" %>
+        autocomplete: "off",
+        data: { controller: "textarea-autogrow" } %>
       <%= form.submit "Отправить", 
         class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800",
         data: { disable_with: "<i class='fas fa-spinner fa-spin'></i> Отправка..." } %>
