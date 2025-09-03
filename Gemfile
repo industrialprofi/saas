@@ -19,6 +19,9 @@ gem "tailwindcss-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# HTTP client for SSE streaming to FastAPI
+gem "faraday", "~> 2.10"
+
 # OAuth provider and JWT support
 # doorkeeper: OAuth 2.0 provider for Rails
 # doorkeeper-jwt: issue access tokens as JWT that FastAPI can verify via JWKS
