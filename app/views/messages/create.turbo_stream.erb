@@ -12,3 +12,8 @@
 <%= turbo_stream.replace "message_form" do %>
   <%= render "messages/form", message: Message.new %>
 <% end %>
+
+<%# Обновляем счётчик квоты %>
+<%= turbo_stream.replace "quota_counter" do %>
+  <%= render "shared/quota_counter" %>
+<% end %>
