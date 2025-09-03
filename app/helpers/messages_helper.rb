@@ -1,9 +1,18 @@
 module MessagesHelper
-  def free_quota_label(user)
-    return '' unless user&.subscription_plan_free?
+  def quota_label(user)
+    return '' unless user
 
-    used = user.daily_free_requests_used
-    limit = user.daily_free_requests_limit
-    "Запросы: #{used}/#{limit}"
+    remaining = user.requests_remaining
+    limit = user.daily_requests_limit
+    "Запросы: #{remaining}/#{limit}"
+  end
+
+  def quota_text_classes(user)
+    base = 'mt-2 text-sm'
+    return base unless user
+
+    exhausted = user.quota_exhausted?
+    color = exhausted ? 'text-red-600' : 'text-gray-600 dark:text-gray-300'
+    "#{base} #{color}"
   end
 end

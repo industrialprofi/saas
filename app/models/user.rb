@@ -11,29 +11,30 @@ class User < ApplicationRecord
     !subscription_plan_free?
   end
 
-  # Daily free requests quota
+  # Daily requests quota
   FREE_DAILY_REQUESTS_LIMIT = 3
+  PAID_DAILY_REQUESTS_LIMIT = 40
 
-  def daily_free_requests_limit
-    FREE_DAILY_REQUESTS_LIMIT
+  def daily_requests_limit
+    subscription_plan_free? ? FREE_DAILY_REQUESTS_LIMIT : PAID_DAILY_REQUESTS_LIMIT
   end
 
-  def daily_free_requests_used
-    return 0 unless subscription_plan_free?
-
+  def daily_requests_used
     Message.where(user_id: id, user_type: "user")
            .where(created_at: Time.zone.today.all_day)
            .count
   end
 
-  def free_requests_remaining
-    return 0 unless subscription_plan_free?
-
-    [ daily_free_requests_limit - daily_free_requests_used, 0 ].max
+  def requests_remaining
+    [ daily_requests_limit - daily_requests_used, 0 ].max
   end
 
-  def can_send_free_request?
-    subscription_plan_free? && free_requests_remaining.positive?
+  def quota_exhausted?
+    requests_remaining.zero?
+  end
+
+  def can_send_request?
+    !quota_exhausted?
   end
 
   # Create or fetch user from OmniAuth hash
