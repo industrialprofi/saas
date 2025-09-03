@@ -25,18 +25,18 @@ class AiClientHttpTest < ActiveSupport::TestCase
     client.define_singleton_method(:issue_client_credentials_token) { |**| "test-token" }
 
     client.stream_chat(
-      messages: [{ role: "user", content: "hi" }],
+      messages: [ { role: "user", content: "hi" } ],
       user: { id: 1, sub: "1", email: "u@example.com", plan: "standard" },
       request_id: "req-1",
       idempotency_key: "idem-1"
     ) do |event:, data:|
-      events << [event, data]
+      events << [ event, data ]
     end
 
     # Проверяем, что пришёл chunk с текстом и затем done
     assert_equal [
-      ["chunk", { "content" => "Привет" }],
-      ["done", {}]
+      [ "chunk", { "content" => "Привет" } ],
+      [ "done", {} ]
     ], events
 
     assert_requested :post, "http://example.com/v1/chat/stream", times: 1
@@ -52,12 +52,12 @@ class AiClientHttpTest < ActiveSupport::TestCase
     client.define_singleton_method(:issue_client_credentials_token) { |**| "test-token" }
 
     client.stream_chat(
-      messages: [{ role: "user", content: "hi" }],
+      messages: [ { role: "user", content: "hi" } ],
       user: { id: 1, sub: "1", email: "u@example.com", plan: "standard" },
       request_id: "req-2",
       idempotency_key: "idem-2"
     ) do |event:, data:|
-      events << [event, data]
+      events << [ event, data ]
     end
 
     assert_equal 1, events.size
@@ -78,12 +78,12 @@ class AiClientHttpTest < ActiveSupport::TestCase
     client.define_singleton_method(:issue_client_credentials_token) { |**| "test-token" }
 
     client.stream_chat(
-      messages: [{ role: "user", content: "hi" }],
+      messages: [ { role: "user", content: "hi" } ],
       user: { id: 1, sub: "1", email: "u@example.com", plan: "standard" },
       request_id: "req-3",
       idempotency_key: "idem-3"
     ) do |event:, data:|
-      events << [event, data]
+      events << [ event, data ]
     end
 
     # Ожидаем единственное событие error с кодом timeout
