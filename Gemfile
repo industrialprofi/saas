@@ -82,7 +82,7 @@ gem "omniauth", "~> 2.1"
 gem "omniauth-telegram", "~> 0.2.1"
 
 # Authorization
-gem "pundit", "~> 2.3"
+gem "pundit", "~> 2.5"
 
 # Protection: rate limiting & safelist/blacklist
 gem "rack-attack"
